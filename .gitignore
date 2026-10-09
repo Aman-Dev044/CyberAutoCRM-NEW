@@ -1,0 +1,70 @@
+# ---------------------------------------------------------------- dependencies
+node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# -------------------------------------------------------------------- build output
+.next/
+out/
+build/
+dist/
+.swc/
+
+# ------------------------------------------------------------------------ secrets
+# Never commit real credentials. `.env.example` is the template that IS tracked.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+secrets.json
+
+# --------------------------------------------------------------------------- logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# ------------------------------------------------------------------- typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# ------------------------------------------------------------- testing / coverage
+/coverage
+/.nyc_output
+/playwright-report
+/test-results
+/blob-report
+
+# ---------------------------------------------------------------------- tooling
+.eslintcache
+.cache/
+.turbo/
+.vercel
+
+# ---------------------------------------------------------- editors & OS cruft
+.idea/
+*.sublime-workspace
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --------------------------------------------------------------------- scratch
+tmp/
+temp/
+scratch/
+scripts/tmp*
+*.local
