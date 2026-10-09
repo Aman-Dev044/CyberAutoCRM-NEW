@@ -205,11 +205,29 @@ CORS_ALLOWED_ORIGINS="http://YOUR_VPS_IP:2552"
 Then:
 
 ```bash
-npm run build
+npm run build                     # required: `next start` needs a build
 
-pm2 start npm --name cas-api -- run start:api   # :2442  — serves /api/*
-pm2 start npm --name cas-web -- run start:web   # :2552  — serves the UI
+pm2 start ecosystem.config.cjs    # NEW-CyberautoCRM-BD :2442 + NEW-CyberautoCRM-FD :2552
+pm2 save
+pm2 startup                       # prints a command — run it to survive reboots
+```
+
+Or without the ecosystem file:
+
+```bash
+pm2 start npm --name NEW-CyberautoCRM-BD -- run start:api   # :2442 — the API
+pm2 start npm --name NEW-CyberautoCRM-FD -- run start:web   # :2552 — the web UI
 pm2 save && pm2 startup
+```
+
+Check it came up:
+
+```bash
+pm2 ls
+pm2 logs NEW-CyberautoCRM-BD --lines 40
+curl -s http://127.0.0.1:2442/api/public/services | head -c 120   # API
+curl -s -o /dev/null -w "%{http_code}
+" http://127.0.0.1:2552/  # UI → 200
 ```
 
 Open **http://YOUR_VPS_IP:2552**. The UI loads from `:2552` and every API call goes to `:2442`.
