@@ -2,6 +2,20 @@
 
 export type ApiResult<T> = { success: true; data: T } | { success: false; error: string; details?: unknown };
 
+/**
+ * Where the API lives. Empty (the default) means "same origin as this page",
+ * which is how a single Next.js process serves both the UI and `/api/*`.
+ *
+ * Set NEXT_PUBLIC_API_BASE when the API runs as a separate instance on another
+ * port — e.g. API on :2442 and the web UI on :2552. Cookies are scoped per
+ * host and ignore the port, so the session still works across the two.
+ */
+const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || '').replace(/\/+$/, '');
+
+function resolveUrl(url: string) {
+  return API_BASE && url.startsWith('/api') ? `${API_BASE}${url}` : url;
+}
+
 export class ApiClientError extends Error {
   status: number;
   details?: unknown;
@@ -18,7 +32,7 @@ export async function api<T = unknown>(
   init: RequestInit & { json?: unknown } = {},
 ): Promise<T> {
   const { json, ...rest } = init;
-  const res = await fetch(url, {
+  const res = await fetch(resolveUrl(url), {
     ...rest,
     headers: {
       ...(json !== undefined ? { 'Content-Type': 'application/json' } : {}),
@@ -26,6 +40,8 @@ export async function api<T = unknown>(
     },
     body: json !== undefined ? JSON.stringify(json) : rest.body,
     cache: 'no-store',
+    // Needed when the API is a different origin (split-port deployments).
+    credentials: 'include',
   });
 
   let payload: ApiResult<T> | null = null;

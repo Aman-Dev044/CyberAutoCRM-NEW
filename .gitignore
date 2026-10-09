@@ -9,7 +9,9 @@ node_modules/
 !.yarn/versions
 
 # -------------------------------------------------------------------- build output
+# `.next-api` / `.next-web` are the split-port dev builds.
 .next/
+.next-*/
 out/
 build/
 dist/

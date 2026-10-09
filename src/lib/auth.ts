@@ -58,12 +58,23 @@ export async function getSession(): Promise<SessionUser | null> {
   return verifySession(store.get(AUTH_COOKIE)?.value);
 }
 
+/**
+ * `Secure` cookies are only stored by the browser over HTTPS. That is the right
+ * default in production, but it silently breaks login on a VPS still served
+ * over plain HTTP (http://IP:PORT) — the cookie is set and immediately dropped.
+ * Set COOKIE_SECURE=false for that case, and switch it back on once TLS is up.
+ */
+const COOKIE_SECURE =
+  process.env.COOKIE_SECURE !== undefined
+    ? process.env.COOKIE_SECURE === 'true'
+    : process.env.NODE_ENV === 'production';
+
 export async function setSessionCookie(token: string) {
   const store = await cookies();
   store.set(AUTH_COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: COOKIE_SECURE,
     path: '/',
     maxAge: 60 * 60 * 24 * 7,
   });

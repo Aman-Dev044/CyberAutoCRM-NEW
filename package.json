@@ -4,13 +4,18 @@
   "private": true,
   "description": "CyberAutoSuite CRM - Advanced auto service center management platform",
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/dev.mjs",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 2552",
     "lint": "eslint .",
     "seed": "tsx scripts/seed.ts",
     "seed:fresh": "tsx scripts/seed.ts --fresh",
-    "clean:test-data": "tsx scripts/cleanup-test-data.ts"
+    "clean:test-data": "tsx scripts/cleanup-test-data.ts",
+    "start:api": "next start -p 2442",
+    "start:web": "next start -p 2552",
+    "dev:api": "node scripts/dev.mjs api",
+    "dev:web": "node scripts/dev.mjs web",
+    "dev:single": "next dev -p 2552"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
